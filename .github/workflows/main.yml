@@ -1,24 +1,25 @@
-姓名: Zeabur自动重启
-在……之上:
-计划表:
-    - 克朗:12'0 */6 * * *'  # 每6小时执行一次（UTC时间）
-workflow_dispatch:      # 允许手动触发
 
-工作:
-重新启动:
-连续的：Ubuntu-最新
-步骤:
-      - 姓名: 调用Zeabur API重启服务
-跑: |
-curl-X柱https://gateway.zeabur.com/graphql\
--h"内容类型：应用程序/JSON"\
--h"授权：承载${{secrets.ZEABUR_API_KEY}}"\
--d'{
-"查询"："突变重新部署($input:RedeployInput！){重新部署(输入：$输入)}"，
-“变量”：{
-“输入”：{
-"项目ID"："${{secretters.ZEABUR_PROJECT_ID}}"，
-"服务ID"："${{secretters.ZEABUR_SERVICE_ID}}"
+name: Zeabur Auto Restart
+on:
+  schedule:
+    - cron: '0 */12 * * *'
+  workflow_dispatch:
+
+jobs:
+  restart:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Zeabur API Redeploy
+        run: |
+          curl -X POST https://gateway.zeabur.com/graphql \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.ZEABUR_API_KEY }}" \
+            -d '{
+              "query": "mutation Redeploy($input: RedeployInput!) { redeploy(input: $input) }",
+              "variables": {
+                "input": {
+                  "projectID": "${{ secrets.ZEABUR_PROJECT_ID }}",
+                  "serviceID": "${{ secrets.ZEABUR_SERVICE_ID }}"
                 }
               }
             }'
