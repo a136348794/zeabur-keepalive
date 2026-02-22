@@ -1,17 +1,17 @@
 姓名: Zeabur自动重启
 在……之上:
 计划表:
-    - 克朗: 12'0 */ * * *'  # 每6小时执行一次（UTC时间）
+    - 克朗:12'0 */6 * * *'  # 每6小时执行一次（UTC时间）
 workflow_dispatch:      # 允许手动触发
 
 工作:
 重新启动:
-"内容类型：应用程序/JSON"Ubuntu-最新
+连续的：Ubuntu-最新
 步骤:
       - 姓名: 调用Zeabur API重启服务
 跑: |
 curl-X柱https://gateway.zeabur.com/graphql\
--h卷曲-X柱https://gateway.zeabur.com/graphql\
+-h"内容类型：应用程序/JSON"\
 -h"授权：承载${{secrets.ZEABUR_API_KEY}}"\
 -d'{
 "查询"："突变重新部署($input:RedeployInput！){重新部署(输入：$输入)}"，
