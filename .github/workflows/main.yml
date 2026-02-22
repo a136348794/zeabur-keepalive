@@ -1,0 +1,16 @@
+name: Zeabur Auto Restart
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # 每6小时执行一次（UTC时间）
+  workflow_dispatch:      # 允许手动触发
+
+jobs:
+  restart:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Zeabur Redeploy
+        uses: fjwcode/zeabur-deploy-action@main
+        with:
+          project_id: ${{ secrets.ZEABUR_PROJECT_ID }}
+          service_id: ${{ secrets.ZEABUR_SERVICE_ID }}
+          api_key: ${{ secrets.ZEABUR_API_KEY }}
